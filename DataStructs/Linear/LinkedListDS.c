@@ -23,7 +23,7 @@ LinkedList* createLinkedList() {
     return l;
 }
 
-void print(LinkedList* l) {
+void display(LinkedList* l) {
     Node* curr = l->head;
     while (curr != NULL) {
         printf("%d -> ", curr->data);
@@ -114,29 +114,29 @@ int main() {
 
     // Printing the linked list
     printf("Original linked list: ");
-    print(l1);
+    display(l1);
 
     // Appending new nodes
     append(l1, newNode1);
     printf("Linked list after appending: ");
-    print(l1);
+    display(l1);
     
     // Inserting new nodes
     insert(l1, newNode2, 0);
     insert(l1, newNode3, 2);
     printf("Linked list after inserting: ");
-    print(l1);
+    display(l1);
 
     // Removing a node
     int deletedValue = delete(l1, 2);
     printf("Linked list after removing: ");
-    print(l1);
+    display(l1);
     printf("Deleted value: %d\n", deletedValue);
 
     // Reversing the linked list
     reverse(l1);
     printf("Linked list after reversing: ");
-    print(l1);
+    display(l1);
 
     return 0;
 }
