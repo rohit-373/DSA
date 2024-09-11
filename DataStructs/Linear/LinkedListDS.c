@@ -6,15 +6,21 @@ typedef struct node {
     struct node* next;
 } Node;
 
-typedef struct {
+typedef struct linkedlist{
     Node* head;
 } LinkedList;
 
 Node* createNode(int data) {
-    Node* newNode = malloc(sizeof(Node));
+    Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
     return newNode;
+}
+
+LinkedList* createLinkedList() {
+    LinkedList* l = (LinkedList*)malloc(sizeof(LinkedList));
+    l->head = NULL;
+    return l;
 }
 
 void print(LinkedList* l) {
@@ -93,7 +99,7 @@ void reverse(LinkedList* l) {
 
 int main() {
     // Creating a linked list
-    LinkedList* l1 = malloc(sizeof(LinkedList));
+    LinkedList* l1 = createLinkedList();
     Node* node1 = createNode(11);
     l1->head = node1;
     Node* node2 = createNode(18);
