@@ -25,11 +25,11 @@ LinkedList* createLinkedList() {
 
 void display(LinkedList* l) {
     Node* curr = l->head;
-    while (curr->next != NULL) {
+    while (curr != NULL) {
         printf("%d -> ", curr->data);
         curr = curr->next;
     }
-    printf("%d -> null\n", curr->data);
+    printf("null\n", curr->data);
 }
 
 void append(LinkedList* l, Node* newNode) {
