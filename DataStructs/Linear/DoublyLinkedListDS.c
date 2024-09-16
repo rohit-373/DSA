@@ -4,6 +4,7 @@
 typedef struct node {
     int data;
     struct node* next;
+    struct node* prev;
 } Node;
 
 typedef struct linkedlist {
@@ -14,6 +15,7 @@ Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
+    newNode->prev = NULL;
     return newNode;
 }
 
@@ -29,7 +31,7 @@ void display(LinkedList* l) {
         printf("%d -> ", curr->data);
         curr = curr->next;
     }
-    printf("null\n", curr->data);
+    printf("null\n");
 }
 
 void append(LinkedList* l, Node* newNode) {
@@ -37,64 +39,66 @@ void append(LinkedList* l, Node* newNode) {
         l->head = newNode;
     } else {
         Node* curr = l->head;
-        while (curr->next != NULL) {
+        while (curr->next != NULL)
             curr = curr->next;
-        }
         curr->next = newNode;
+        newNode->prev = curr;
     }
 }
 
 void insert(LinkedList* l, Node* newNode, int index) {
     if (index == 0) {
         newNode->next = l->head;
+        l->head->prev = newNode;
         l->head = newNode;
     } else {
         Node* curr = l->head;
-        for (int i = 0; i < index-1 && curr != NULL; i++) {
+        for (int i = 0; i < index-1 && curr->next != NULL; i++)
             curr = curr->next;
-        }
-        if (curr != NULL) {
+        if (curr->next != NULL) {
             newNode->next = curr->next;
             curr->next = newNode;
+            newNode->prev = curr;
+            newNode->next->prev = newNode;
         }
     }
 }
 
-int delete(LinkedList* l, int index) {
+int deleteNode(LinkedList* l, int index) {
     int deletedValue = -1;
     if (index == 0) {
         Node* temp = l->head;
         deletedValue = temp->data;
         l->head = l->head->next;
+        l->head->prev = NULL;
         free(temp);
     } else {
         Node* curr = l->head;
-        Node* prev = NULL;
-        for (int i = 0; i < index && curr != NULL; i++) {
-            prev = curr;
+        for (int i = 0; i < index && curr != NULL; i++)
             curr = curr->next;
-        }
         if (curr != NULL) {
-            Node* temp = curr;
-            deletedValue = temp->data;
-            prev->next = curr->next;
-            free(temp);
+            deletedValue = curr->data;
+            curr->prev->next = curr->next;
+            if (curr->next != NULL)
+                curr->next->prev = curr->prev;
+            free(curr);
         }
     }
     return deletedValue;
 }
 
 void reverse(LinkedList* l) {
-    Node* prev = NULL;
+    Node* temp = NULL;
     Node* curr = l->head;
-    Node* next = NULL;
     while (curr != NULL) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
+        temp = curr->next;
+        curr->next = curr->prev;
+        curr->prev = temp;
+        curr = temp;
     }
-    l->head = prev;
+    if (temp != NULL) {
+        l->head = temp->prev;
+    }
 }
 
 int main() {
@@ -104,8 +108,10 @@ int main() {
     l1->head = node1;
     Node* node2 = createNode(18);
     node1->next = node2;
+    node2->prev = node1;
     Node* node3 = createNode(24);
     node2->next = node3;
+    node3->prev = node2;
 
     // Creating new nodes
     Node* newNode1 = createNode(22);
@@ -118,18 +124,20 @@ int main() {
 
     // Appending new nodes
     append(l1, newNode1);
-    printf("Linked list after appending: ");
-    display(l1);
-    
-    // Inserting new nodes
-    insert(l1, newNode2, 0);
-    insert(l1, newNode3, 2);
-    printf("Linked list after inserting: ");
+    append(l1, newNode2);
+    append(l1, newNode3);
+    printf("Linked list after appending new nodes: ");
     display(l1);
 
-    // Removing a node
-    int deletedValue = delete(l1, 2);
-    printf("Linked list after removing: ");
+    // Inserting a new node at index 2
+    Node* newNode4 = createNode(33);
+    insert(l1, newNode4, 2);
+    printf("Linked list after inserting a new node at index 2: ");
+    display(l1);
+
+    // Deleting a node at index 3
+    int deletedValue = deleteNode(l1, 3);
+    printf("Linked list after deleting a node at index 3: ");
     display(l1);
     printf("Deleted value: %d\n", deletedValue);
 
