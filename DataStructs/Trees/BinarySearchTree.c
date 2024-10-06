@@ -56,6 +56,24 @@ Node* maxValue(Node* root) {
     return current;
 }
 
+int inOrderSuccessor(Node* root, int pos) {
+    Node* current = search(root, pos);
+    if (current == NULL)
+        return -1;
+    if (current->right != NULL)
+        return minValue(current->right)->data;
+    Node* successor = NULL;
+    Node* ancestor = root;
+    while (ancestor != current) {
+        if (current->data < ancestor->data) {
+            successor = ancestor;
+            ancestor = ancestor->left;
+        } else
+            ancestor = ancestor->right;
+    }
+    return successor->data;
+}
+
 Node* delete(Node* root, int data) {
     if (root == NULL)
         return root;
