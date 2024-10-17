@@ -18,33 +18,29 @@ Node* createNode(int data) {
 void zigZagTraversal(Node* root) {
     if (root == NULL)
         return;
-    Node* currentLevel[100];
-    Node* nextLevel[100];
-    int currentLevelSize = 0;
-    int nextLevelSize = 0;
-    int leftToRight = 0;
-    currentLevel[currentLevelSize++] = root;
-    while (currentLevelSize > 0) {
-        Node* node = currentLevel[--currentLevelSize];
-        printf("%d ", node->data);
-        if (leftToRight) {
-            if (node->left != NULL)
-                nextLevel[nextLevelSize++] = node->left;
-            if (node->right != NULL)
-                nextLevel[nextLevelSize++] = node->right;
-        } else {
-            if (node->right != NULL)
-                nextLevel[nextLevelSize++] = node->right;
-            if (node->left != NULL)
-                nextLevel[nextLevelSize++] = node->left;
+    Node* queue[100];
+    int front = 0, rear = 0;
+    queue[rear++] = root;
+    int swap = 1;
+    while (front < rear) {
+        int size = rear - front;
+        for (int i = 0; i < size; i++) {
+            Node* current = queue[front++];
+            if (swap) {
+                if (current->left != NULL)
+                    queue[rear++] = current->left;
+                if (current->right != NULL)
+                    queue[rear++] = current->right;
+            } else {
+                if (current->right != NULL)
+                    queue[rear++] = current->right;
+                if (current->left != NULL)
+                    queue[rear++] = current->left;
+            }
+            printf("%d ", current->data);
         }
-        if (currentLevelSize == 0) {
-            leftToRight = 1 - leftToRight;
-            currentLevelSize = nextLevelSize;
-            nextLevelSize = 0;
-            for (int i = 0; i < currentLevelSize; i++)
-                currentLevel[i] = nextLevel[i];
-        }
+        printf("\n");
+        swap = !swap;
     }
 }
 
