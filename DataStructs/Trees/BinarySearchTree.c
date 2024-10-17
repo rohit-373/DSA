@@ -83,17 +83,11 @@ Node* delete(Node* root, int data) {
         root->right = delete(root->right, data);
     else {
         if (root->left == NULL && root->right == NULL) {
-            Node* temp = root;
             root = NULL;
-            free(temp);
         } else if (root->left == NULL) {
-            Node* temp = root;
             root = root->right;
-            free(temp);
         } else if (root->right == NULL) {
-            Node* temp = root;
             root = root->left;
-            free(temp);
         } else {
             Node* temp = minValue(root->right);
             root->data = temp->data;

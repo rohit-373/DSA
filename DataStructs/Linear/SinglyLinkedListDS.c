@@ -6,10 +6,6 @@ typedef struct node {
     struct node* next;
 } Node;
 
-typedef struct linkedlist {
-    Node* head;
-} LinkedList;
-
 Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     newNode->data = data;
@@ -17,14 +13,8 @@ Node* createNode(int data) {
     return newNode;
 }
 
-LinkedList* createLinkedList() {
-    LinkedList* l = (LinkedList*)malloc(sizeof(LinkedList));
-    l->head = NULL;
-    return l;
-}
-
-void display(LinkedList* l) {
-    Node* curr = l->head;
+void display(Node* head) {
+    Node* curr = head;
     while (curr->next != NULL) {
         printf("%d -> ", curr->data);
         curr = curr->next;
@@ -32,29 +22,29 @@ void display(LinkedList* l) {
     printf("%d\n", curr->data);
 }
 
-void append(LinkedList* l, int data) {
+void append(Node** head, int data) {
     Node* newNode = createNode(data);
-    if (l->head == NULL) {
-        l->head = newNode;
+    if (*head == NULL) {
+        *head = newNode;
         return;
     }
     
-    Node* curr = l->head;
+    Node* curr = *head;
     while (curr->next != NULL) {
         curr = curr->next;
     }
     curr->next = newNode;
 }
 
-void insert(LinkedList* l, int data, int index) {
+void insert(Node** head, int data, int index) {
     Node* newNode = createNode(data);
     if (index == 0) {
-        newNode->next = l->head;
-        l->head = newNode;
+        newNode->next = *head;
+        *head = newNode;
         return;
     }
 
-    Node* curr = l->head;
+    Node* curr = *head;
     for (int i = 0; i < index-1 && curr->next != NULL; i++) {
         curr = curr->next;
     }
@@ -64,17 +54,15 @@ void insert(LinkedList* l, int data, int index) {
     }
 }
 
-int delete(LinkedList* l, int index) {
+int delete(Node** head, int index) {
     int deletedValue = -1;
     if (index == 0) {
-        Node* temp = l->head;
-        deletedValue = temp->data;
-        l->head = l->head->next;
-        free(temp);
+        deletedValue = (*head)->data;
+        *head = (*head)->next;
         return deletedValue;
     }
 
-    Node* curr = l->head;
+    Node* curr = *head;
     Node* prev = NULL;
     for (int i = 0; i < index && curr != NULL; i++) {
         prev = curr;
@@ -88,9 +76,9 @@ int delete(LinkedList* l, int index) {
     return deletedValue;
 }
 
-void reverse(LinkedList* l) {
+void reverse(Node** head) {
     Node* prev = NULL;
-    Node* curr = l->head;
+    Node* curr = *head;
     Node* next = NULL;
     while (curr != NULL) {
         next = curr->next;
@@ -98,14 +86,14 @@ void reverse(LinkedList* l) {
         prev = curr;
         curr = next;
     }
-    l->head = prev;
+    *head = prev;
 }
 
 int main() {
     // Creating a linked list
-    LinkedList* l1 = createLinkedList();
+    Node* head = NULL;
     Node* node1 = createNode(11);
-    l1->head = node1;
+    head = node1;
     Node* node2 = createNode(18);
     node1->next = node2;
     Node* node3 = createNode(24);
@@ -113,29 +101,29 @@ int main() {
 
     // Printing the linked list
     printf("Original linked list: ");
-    display(l1);
+    display(head);
 
     // Appending new nodes
-    append(l1, 22);
+    append(&head, 22);
     printf("Linked list after appending: ");
-    display(l1);
+    display(head);
     
     // Inserting new nodes
-    insert(l1, 43, 0);
-    insert(l1, 5, 2);
+    insert(&head, 43, 0);
+    insert(&head, 5, 2);
     printf("Linked list after inserting: ");
-    display(l1);
+    display(head);
 
     // Removing a node
-    int deletedValue = delete(l1, 2);
+    int deletedValue = delete(&head, 2);
     printf("Linked list after removing: ");
-    display(l1);
+    display(head);
     printf("Deleted value: %d\n", deletedValue);
 
     // Reversing the linked list
-    reverse(l1);
+    reverse(&head);
     printf("Linked list after reversing: ");
-    display(l1);
+    display(head);
 
     return 0;
 }
